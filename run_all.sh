@@ -1,33 +1,41 @@
 #!/bin/bash
 
-gcc -o coefficientsWDM_time coefficientsWDM_time.c csubs.c -lm -lgsl
-gcc -o coefficientsWDM_freq coefficientsWDM_freq.c csubs.c -lm -lgsl
-gcc -o Chirp_WDM Chirp_WDM.c -lm -lgsl
-gcc -o transform_time transform_time.c csubs.c-lm -lgsl
-gcc -o transform_freq transform_freq.c csubs.c -lm -lgsl
-gcc -o match match.c csubs.c -lm -lgsl
+gcc -o ./build/coefficientsWDM_time ./src/coefficientsWDM_time.c ./src/csubs.c -lm -lgsl
+gcc -o ./build/coefficientsWDM_freq ./src/coefficientsWDM_freq.c ./src/csubs.c -lm -lgsl
+gcc -o ./build/Chirp_WDM ./src/Chirp_WDM.c -lm -lgsl
+gcc -o ./build/transform_time ./src/transform_time.c ./src/csubs.c -lm -lgsl
+gcc -o ./build/transform_freq ./src/transform_freq.c ./src/csubs.c -lm -lgsl
+gcc -o ./build/match ./src/match.c ./src/csubs.c -lm -lgsl
 
 mkdir coeffs
 
 #compute the fast frequency Taylor expansion coefficients
-./coefficientsWDM_freq
-#compute the fast time Taylor expansion coefficients
-./coefficientsWDM_time
+
+# if coeffs/WDMcoeffs0.dat does not exist, then run the ./coefficientsWDM_time
+if [ ! -f coeffs/WDMcoeffs0.dat ]; then
+    ./build/coefficientsWDM_time
+fi
+
+# if coeffs/WDMcoeffsf0.dat does not exist, then run the ./coefficientsWDM_freq
+if [ ! -f coeffs/WDMcoeffsf0.dat ]; then
+    ./build/coefficientsWDM_freq
+fi
+
 #generate a time domain chirplet and its fast WDM transform four ways
-./Chirp_WDM
+./build/Chirp_WDM
 #compute the WDM transform of the chirplet directly in the time domain
-./transform_time chrp_time.dat
+./build/transform_time chrp_time.dat
 #compute the WDM transform of the chirplet by FFTing first
-./transform_freq chrp_time.dat 0
+./build/transform_freq chrp_time.dat 0
 #compute the match between the dirtect time and frequency domain transforms
-./match BinaryT.dat BinaryF.dat
+./build/match BinaryT.dat BinaryF.dat
 #compute the match between the dirtect frequency domain transform and each of
 #the fast transforms
-./match BinaryF.dat BinaryTaylorT.dat
-./match BinaryF.dat BinarySparseT.dat
-./match BinaryF.dat BinaryTaylorF.dat
-./match BinaryF.dat BinarySparseF.dat
+./build/match BinaryF.dat BinaryTaylorT.dat
+./build/match BinaryF.dat BinarySparseT.dat
+./build/match BinaryF.dat BinaryTaylorF.dat
+./build/match BinaryF.dat BinarySparseF.dat
 
-gnuplot tran.gnu
-open tran.png
+gnuplot tranf.gnu
+pen tranf.png
 

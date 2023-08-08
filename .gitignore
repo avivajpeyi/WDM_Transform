@@ -1,0 +1,10 @@
+coeffs
+*.dat
+*.png
+
+
+# Ignore all build files
+build
+.idea
+
+.DS_Store

@@ -81,7 +81,8 @@ int main()
      Tfilt = dt*(double)(K);
     
      Tobs = dt*(double)(Nt*Nf);
-     
+
+     printf("In coefficientWDM_freq\n");
      printf("Filter length (seconds) %e\n", Tfilt);
     
     // total width of wavelet in frequency
@@ -123,10 +124,11 @@ int main()
      Nfsam[j] = (int)((Tfilt/2.0+0.5*td[j]*DF)/delt);
      
     }
-    
+
+    printf("Writing coefficients coeffs/WDMcoeffsf\n");
     for(k=0; k< Ntd; k++)
     {
-        printf("%d %d\n", k, Nfsam[k]);
+        printf("idx=%d, Nfsamp[idx]=%d\n", k, Nfsam[k]);
         sprintf(filename, "coeffs/WDMcoeffsf%d.dat", k);
         out = fopen(filename,"w");
     for(j=-Nfsam[k]; j < Nfsam[k]; j++)

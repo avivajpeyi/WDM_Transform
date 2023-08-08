@@ -80,7 +80,8 @@ int main()
      K = mult*2*Nf;
      
      Tfilt = dt*(double)(K);
-     
+
+     printf("In coefficientWDM_time\n");
      printf("Filter length (seconds) %e\n", Tfilt);
      
      dom = TPI/Tfilt;  // max frequency is K/2*dom = pi/dt = OM
@@ -163,50 +164,50 @@ int main()
      if(Nfsam[j]%2 != 0) Nfsam[j]++; // makes sure it is an even number
     }
 
-        // The odd wavelets coefficienst can be obtained from the even.
-        // odd cosine = -even sine, odd sine = even cosine
+    // The odd wavelets coefficienst can be obtained from the even.
+    // odd cosine = -even sine, odd sine = even cosine
 
-        // each wavelet covers a frequency band of width DW
-        // execept for the first and last wavelets
-        // there is some overlap. The wavelet pixels are of width
-        // DOM/PI, except for the first and last which have width
-        // half that
-    
-        fcent = (double)(k)*DF;
-            
-            for(jj=0; jj< Nfd; jj++)  // loop over f-dot slices
-            {
-                
-            printf("%d %d\n", jj, Nfsam[jj]);
-                
-            sprintf(filename, "coeffs/WDMcoeffs%d.dat", jj);
-            out = fopen(filename,"w");
-                
-            for(j=0; j< Nfsam[jj]; j++)  // loop over frequency slices
-            {
-                f = fcent+((double)(j-Nfsam[jj]/2)+0.5)*df;
+    // each wavelet covers a frequency band of width DW
+    // execept for the first and last wavelets
+    // there is some overlap. The wavelet pixels are of width
+    // DOM/PI, except for the first and last which have width
+    // half that
 
-                evc = 0.0;
-                evs = 0.0;
-                
-                for(i=0; i< K; i++)
-                {
-                    t = ((double)(i-K/2))*dt;
-                    z = TPI*(f*t+0.5*fd[jj]*t*t);
-                    c = cos(z);
-                    s = sin(z);
-                    evc += wave[i]*c;
-                    evs += wave[i]*s;
-                }
-                
-                fprintf(out,"%d %.14e %.14e\n", j, evc, evs);
-                
+    fcent = (double)(k)*DF;
+    printf("Writing coefficients to coeffs/WDMcoeffs\n");
+    for(jj=0; jj< Nfd; jj++)  // loop over f-dot slices
+    {
+
+        printf("idx=%d, Nfsamp[idx]=%d\n", jj, Nfsam[jj]);
+
+        sprintf(filename, "coeffs/WDMcoeffs%d.dat", jj);
+        out = fopen(filename,"w");
+
+        for(j=0; j< Nfsam[jj]; j++)  // loop over frequency slices
+        {
+            f = fcent+((double)(j-Nfsam[jj]/2)+0.5)*df;
+
+            evc = 0.0;
+            evs = 0.0;
+
+            for(i=0; i< K; i++)
+            {
+                t = ((double)(i-K/2))*dt;
+                z = TPI*(f*t+0.5*fd[jj]*t*t);
+                c = cos(z);
+                s = sin(z);
+                evc += wave[i]*c;
+                evs += wave[i]*s;
             }
-                
-                fclose(out);
-                
-            }
-    
+
+            fprintf(out,"%d %.14e %.14e\n", j, evc, evs);
+
+        }
+
+        fclose(out);
+
+    }
+
    
        
    free_int_vector(Nfsam);

@@ -11,10 +11,15 @@ If the lookup tables have already been generated, type
 
 source run.sh
 
-The run_all.sh script compiles all the codes then runs the codes coefficientsWDM_time.c and coefficientsWDM_freq.c to generate the lookup tables used for the fast Taylor expansion based WDM transforms. The time domain code takes a lot longer to run than the frequency domain code. These only need to be run once for a given set of WDM parameters.
-The WDM parameters are set in the header file wdm.h. 
-
-If the lookup tables have already been generated, that step can be skipped. The run.sh script is used when the lookup tables already exits.
+The run_all.sh script 
+1. compiles all the codes 
+2. runs the codes coefficientsWDM_time.c and coefficientsWDM_freq.c to generate the lookup tables
+   - these tables are used for the fast Taylor expansion based WDM transforms.
+   - The time domain code takes a lot longer to run than the frequency domain code. 
+   - These only need to be run once for a given set of WDM parameters.
+   - These are saved to the files TaylorT.dat, TaylorF.dat, SparseT.dat, SparseF.dat 
+   - The WDM parameters are set in the header file wdm.h. 
+   - If the lookup tables have already been generated, this step can be skipped. 
 
 The scripts next call the code Chirp_WDM.c. This code illustrates the four fast methods for generating the WDM transform for a binary signal using a chirplet waveform with a linear chirp. The code first computes the chirplet waveform in the time domain and saves it to the file chrp_time.dat. It then computes the WDM transform using the the TaylorT, TaylorF, and sparse T and F transforms. These are saved to the files BinaryTaylorT.dat, BinarySparseT.dat, BinaryTaylorF.dat, BinarySparseF.dat. Here the term "Binary" refers to the time-frequency grid being rectangular, as opposed to "Dyadic", which is more commonly used for discrete wavelet transforms.
 
